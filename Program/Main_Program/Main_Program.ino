@@ -11,11 +11,12 @@ INFO
 PROBLEMS
 * swPin stays HIGH after pressed > Add a 10k MINRES
 * change the RobotFW delay to an appropriate value
+* write FW() fn
 
 ===================================================================================
 (copywrite) 
 © Poornamith
-© W_Ishara
+© Infast
 
 revised: 22-10-2015
 Git Repo: https://github.com/Poornamith/robot_MEX4273
@@ -33,18 +34,23 @@ const int black = 600, white = 300;
 
 void setup() {
 
-   //== PIN CONFIG ================================================================
-   pinMode(swPin, INPUT);
-   pinMode(ledPin, OUTPUT);
-   pinMode(speakerPin, OUTPUT);
+  //== PIN CONFIG ================================================================
+  pinMode(swPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(speakerPin, OUTPUT);
 
-   //set 8,9,10,11 as OUTPUT
-   //For SSD
-   //DDRB = DDRB | B00001111;
-   for(int i = 0; i < 7; i++) {
+  //set 8,9,10,11 as OUTPUT
+  //For SSD
+  //DDRB = DDRB | B00001111;
+  for(int i = 0; i < 7; i++) {
     pinMode(ssd[i], OUTPUT);
   }
-   
+
+  pinMode(in1Pin, OUTPUT);
+  pinMode(in2Pin, OUTPUT);
+  pinMode(in3Pin, OUTPUT);
+  pinMode(in4Pin, OUTPUT);
+  
   Serial.begin(9600);
   Serial.println("START");
   //================================================================================
@@ -53,6 +59,9 @@ void setup() {
   displaySSD(counter);              //display ON
   while(checkSw());                 //Wait for SW press
 
+  robotFW();                        //Move Robot for a small time period
+  delay(1000);
+  
   while(readSensors() < black) {    //move until first black stripe
     robotFW();
     delay(100);
