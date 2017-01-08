@@ -129,6 +129,8 @@ void robotSTOP(int getTime) {
 
 void alarm(int getTone, int getDelay) {
   tone(speakerPin, getTone, getDelay);    //alarm tone generator
+  delay(getDelay);
+  noTone(speakerPin);
 }
 
 

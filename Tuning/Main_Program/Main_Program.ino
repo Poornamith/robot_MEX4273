@@ -84,7 +84,9 @@ void setup() {
   while(1);*/
 
   //move robot for a small time period
-  robotFW(10000);
+  robotFW(5000);
+  alarm(1500, 500);
+  alarm(1000, 500);
 }
 
 
