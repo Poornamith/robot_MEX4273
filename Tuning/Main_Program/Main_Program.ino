@@ -29,8 +29,7 @@ Git Repo: https://github.com/Poornamith/robot_MEX4273
 //Global Variables
 int counter = 0;    //SSD counter 
 bool state = 0;     //State Variable
-
-const int black = 600, white = 300; 
+ 
 
 void setup() {
 
@@ -92,7 +91,10 @@ void setup() {
 void loop() {
   
   //Last Black stripe
-  if((readSensors() > black) && state) {
+  //if((readSensors() > black) && state) {
+  ldrVal = analogRead(ldrPin);
+  Serial.println(ldrVal); 
+  if(ldrVal > black) {
     alarm(500, 500);
     delay(100);
     alarm(500, 500);
@@ -106,7 +108,7 @@ void loop() {
   }
 
   //White stripe
-  if(readSensors() > white) {
+  if(readSensors() < white) {
     alarm(750, 200);
     counter++;
     Serial.print(counter);
@@ -115,7 +117,7 @@ void loop() {
 
     Serial.print("WHITE");
     
-    while(readSensors() > white) {    //wait until white strip is passed
+    while(readSensors() < white) {    //wait until white strip is passed
       robotFW(500);
     }
   }

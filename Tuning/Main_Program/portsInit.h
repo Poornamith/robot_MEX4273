@@ -15,6 +15,8 @@ int bitVal = 0;
 
 const int sensorPin = A0;
 int sensorVal = 0;
+const int ldrPin = A3;
+int ldrVal = 0;
 
 const int in1Pin = 5;
 const int in2Pin = 4;
@@ -22,6 +24,21 @@ const int in3Pin = 3;
 const int in4Pin = 2;
 
 //Stepper motor(512, in1Pin, in2Pin, in3Pin, in4Pin);
+
+//== COLOR CALIBRATION =================================================================
+
+/*  +-------------+-------------+-------------+
+    |  COLOR      |    IR (A)   |    IR (D)   |
+    +-------------+-------------+-------------+
+    | Transparent | 200 - 550   |  100 - 105  |
+    | White       |  40 - 150   |  100 - 105  |
+    | Black       | 650 - 720   |  1023       |
+    +-------------+-------------+-------------+
+*/
+
+const int black = 800, white = 200;
+
+
 //======================================================================================
 
   
