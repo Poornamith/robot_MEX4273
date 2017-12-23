@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <Stepper.h>
+//#include <Stepper.h>
 
 //== ports =============================================================================
 
@@ -15,12 +15,30 @@ int bitVal = 0;
 
 const int sensorPin = A0;
 int sensorVal = 0;
+const int ldrPin = A3;
+int ldrVal = 0;
 
 const int in1Pin = 5;
 const int in2Pin = 4;
 const int in3Pin = 3;
 const int in4Pin = 2;
-Stepper motor(768, in1Pin, in2Pin, in3Pin, in4Pin);
+
+//Stepper motor(512, in1Pin, in2Pin, in3Pin, in4Pin);
+
+//== COLOR CALIBRATION =================================================================
+
+/*  +-------------+-------------+-------------+
+    |  COLOR      |    IR (A)   |    IR (D)   |
+    +-------------+-------------+-------------+
+    | Transparent | 200 - 550   |  100 - 105  |
+    | White       |  40 - 150   |  100 - 105  |
+    | Black       | 650 - 720   |  1023       |
+    +-------------+-------------+-------------+
+*/
+
+const int black = 800, white = 200;
+
+
 //======================================================================================
 
   
@@ -29,7 +47,8 @@ Stepper motor(768, in1Pin, in2Pin, in3Pin, in4Pin);
 bool checkSw();
 void displaySSD(int getCount);
 int readSensors();
-void robotFW();
+void robotFW(int getTime);
+void robotSTOP(int getTime);
 void alarm(int getTone, int getDelay);
 //======================================================================================
 
@@ -84,13 +103,33 @@ int readSensors() {
   return sensorVal;
 }
 
-void robotFW() {
+void robotFW(int getTime) {
   Serial.print("FW");
-  motor.setSpeed(500);                    //rotate motor for number of steps
+  //motor.setSpeed(20);
+  //motor.step(getSpeed);                   //rotate motor for number of steps
+  
+  digitalWrite(in1Pin, HIGH);
+  digitalWrite(in2Pin, HIGH);
+  digitalWrite(in3Pin, HIGH);
+  digitalWrite(in4Pin, LOW);
+
+  delay(getTime);
+}
+
+void robotSTOP(int getTime) {
+  Serial.print("STOP");
+
+  digitalWrite(in1Pin, LOW);
+  digitalWrite(in2Pin, LOW);
+  digitalWrite(in3Pin, LOW);
+  digitalWrite(in4Pin, LOW);
+
+  delay(getTime);
 }
 
 void alarm(int getTone, int getDelay) {
   tone(speakerPin, getTone, getDelay);    //alarm tone generator
+  delay(getDelay);
+  noTone(speakerPin);
 }
-
 
