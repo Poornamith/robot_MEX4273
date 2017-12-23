@@ -29,8 +29,7 @@ Git Repo: https://github.com/Poornamith/robot_MEX4273
 //Global Variables
 int counter = 0;    //SSD counter 
 bool state = 0;     //State Variable
-
-const int black = 600, white = 300; 
+ 
 
 void setup() {
 
@@ -52,53 +51,66 @@ void setup() {
   pinMode(in4Pin, OUTPUT);
   
   Serial.begin(9600);
-  Serial.println("START");
+  Serial.println("ROBOT START");
   //================================================================================
   
   //== BEGIN OF PROGRAM ============================================================
   displaySSD(counter);              //display ON
-  while(checkSw());                 //Wait for SW press
-
-  robotFW();                        //Move Robot for a small time period
+  
+  /*while(checkSw());               //Wait for SW press
+  robotFW(5000);                    //Move Robot for a small time period
   delay(1000);
   
   while(readSensors() < black) {    //move until first black stripe
     robotFW();
     delay(100);
-  }
+  }*/
 
   digitalWrite(ledPin, HIGH);       //activate alarm and Lamps
-  alarm(500, 500);
+  alarm(1500, 500);
   state = 1;                        //State set to HIGH
-  delay(500);
+  delay(1000);
 
-  Serial.println(" ");
+  Serial.println(" OK ");
   
-  while(readSensors() > black) {    //wait until black strip is passed
-    robotFW();
+  /*while(readSensors() > black) {    //wait until black strip is passed
+    robotFW(2000);
     delay(100);
   }
 
   Serial.println(" ");
+
+  robotFW(1000);
+  while(1);*/
+
+  //move robot for a small time period
+  robotFW(10000);
+  alarm(1500, 500);
+  alarm(1000, 500);
 }
 
 
 void loop() {
   
   //Last Black stripe
-  if((readSensors() > black) && state) {
+  //if((readSensors() > black) && state) {
+  ldrVal = analogRead(ldrPin);
+  Serial.println(ldrVal); 
+  if(ldrVal > black) {
     alarm(500, 500);
-    delay(10000);
-
+    delay(100);
+    alarm(500, 500);
+    robotSTOP(10000);
+    
     //go Up
     while(1) {
       Serial.print("END");
-      robotFW();
+      robotFW(1000);
     }
   }
 
   //White stripe
-  else if(readSensors() > white) {
+  else if(readSensors() < white) {
     alarm(750, 200);
     counter++;
     Serial.print(counter);
@@ -106,20 +118,19 @@ void loop() {
     displaySSD(counter);
 
     Serial.print("WHITE");
-    while(readSensors() > white) {    //wait until white strip is passed
-      robotFW();
-      delay(100);
+    
+    while(readSensors() < white) {    //wait until white strip is passed
+      robotFW(500);
     }
   }
 
   //transparent region
   else {
-    Serial.print("TRANSPARENT");
-    robotFW();
-    delay(100);
+  Serial.println("TRANSPARENT");
+  robotFW(500);
+    //delay(100);
   }
 }
-
 
 
 
